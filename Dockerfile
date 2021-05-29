@@ -15,16 +15,16 @@ ENV BIND_USER=bind \
 COPY --from=add-apt-repositories /etc/apt/trusted.gpg /etc/apt/trusted.gpg
 COPY --from=add-apt-repositories /etc/apt/sources.list /etc/apt/sources.list
 
-RUN 
-
 RUN rm -rf /etc/apt/apt.conf.d/docker-gzip-indexes \
   && apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-  bind9=1:${BIND_VERSION}* bind9-host=1:${BIND_VERSION}* dnsutils \
+     bind9=1:${BIND_VERSION}* bind9-host=1:${BIND_VERSION}* dnsutils \
   wget perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python unzip shared-mime-info \
   && rm -rf /var/lib/apt/lists/* \
   && wget --no-check-certificate http://prdownloads.sourceforge.net/webadmin/webmin_${WEBMIN_VERSION}_all.deb \
-  && dpkg --install webmin_${WEBMIN_VERSION}_all.deb
+  && dpkg --install webmin_${WEBMIN_VERSION}_all.deb \
+  && rm -rf webmin_${WEBMIN_VERSION}_all.deb \
+  && apt-get autoclean
 
 COPY entrypoint.sh /sbin/entrypoint.sh
 
